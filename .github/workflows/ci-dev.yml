@@ -10,7 +10,7 @@ on:
 
   push:
 
-    branches: [ "dev" ]
+    branches: [ "main" ]
 
   #pull_request:
 
@@ -54,9 +54,9 @@ jobs:
 
          tags: |
 
-           registry.nosad.dev/${{ secrets.REGISTRY_USERNAME }}/shorturl-backend-${{ github.env }}:latest
+           registry.nosad.dev/${{ secrets.REGISTRY_USERNAME }}/shorturl-backend-development:latest
 
-           registry.nosad.dev/${{ secrets.REGISTRY_USERNAME }}/shorturl-backend-${{ github.env }}:${{ github.sha }}
+           registry.nosad.dev/${{ secrets.REGISTRY_USERNAME }}/shorturl-backend-development:${{ github.sha }}
 
  deploy-dev:
 
@@ -82,5 +82,5 @@ jobs:
 
      - name: Trigger Restart and pull new image
 
-       run: kubectl rollout restart deployment shorturl-frontend-vuejs-deployment --namespace=dev
+       run: kubectl rollout restart deployment shorturl-backend-deployment --namespace=dev
 
