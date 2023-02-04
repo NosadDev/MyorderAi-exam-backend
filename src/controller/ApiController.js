@@ -8,14 +8,19 @@ export class ApiController {
         let length = ApiController.hashMinLength;
         let retry = 0;
         let hash = randomHash(length);
+        let response = { status: null, message: null };
         while (true) {
             const result = await UrlsModel.findOne({ where: { hash: hash } });
             if (!result) {
                 await UrlsModel.create({
                     hash: hash,
                     url: encodeURI(req.body.url),
+                }).then(() => {
+                    response.status = 200;
+                    response.message = { hash: hash };
                 }).catch(() => {
-                    return res.status(503).json({ error: 'Service Unavailable' })
+                    response.status = 503;
+                    response.message = { error: 'Service Unavailable' };
                 });
                 break;
             } else {
@@ -27,9 +32,7 @@ export class ApiController {
                 retry++;
             }
         }
-        return res.json({
-            hash: hash,
-        });
+        return res.status(response.status).json(response.message);
     }
 
     static async findURL(req, res, next) {
