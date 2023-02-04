@@ -8,7 +8,7 @@ export class ApiController {
         let length = ApiController.hashMinLength;
         let retry = 0;
         let hash = randomHash(length);
-        let response = { status: null, message: null };
+        let response = { status: 200, message: null };
         while (true) {
             const result = await UrlsModel.findOne({ where: { hash: hash } });
             if (!result) {
@@ -16,7 +16,6 @@ export class ApiController {
                     hash: hash,
                     url: encodeURI(req.body.url),
                 }).then(() => {
-                    response.status = 200;
                     response.message = { hash: hash };
                 }).catch(() => {
                     response.status = 503;
