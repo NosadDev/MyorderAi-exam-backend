@@ -9,7 +9,9 @@ app.use(express.json())
 app.use(cors({ origin: '*' }));
 
 app.post('/api/v1/shorten', ApiController.generateHash);
-
+app.get('/healthz', (req, res, next) => {
+    return res.json({ status: "UP" });
+});
 app.get('/:hash', ApiController.findURL);
 
 // fallback route
