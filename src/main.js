@@ -6,7 +6,7 @@ import { ApiController } from "./controller/ApiController.js";
 const app = express();
 
 app.use(express.json())
-app.use(cors({ origin: '*', methods: ["GET", "POST", "OPTIONS"], maxAge: 60 }));
+app.use(cors({ origin: '*' }));
 
 app.post('/api/v1/shorten', ApiController.generateHash);
 app.get('/healthz', (req, res, next) => {
