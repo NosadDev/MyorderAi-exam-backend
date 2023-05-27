@@ -10,25 +10,27 @@ export class ApiController {
         let hash = randomHash(length);
         let response = { status: 200, message: null };
         while (true) {
-            const result = await UrlsModel.findOne({ where: { hash: hash } });
-            if (!result) {
+            try {
                 await UrlsModel.create({
                     hash: hash,
                     url: encodeURI(req.body.url),
                 }).then(() => {
                     response.message = { hash: hash };
-                }).catch(() => {
-                    response.status = 503;
-                    response.message = { error: 'Service Unavailable' };
-                });
+                })
                 break;
-            } else {
-                if (retry >= 3) {
-                    length++;
-                    retry = 0;
+            } catch (error) {
+                if (error.code == 1062) {
+                    if (retry >= 3) {
+                        length++;
+                        retry = 0;
+                    }
+                    hash = randomHash(length);
+                    retry++;
+                } else {
+                    response.status = 503;
+                    response.message = { error: 'Service Unavailable', message: error.message };
+                    break;
                 }
-                hash = randomHash(length);
-                retry++;
             }
         }
         return res.status(response.status).json(response.message);
