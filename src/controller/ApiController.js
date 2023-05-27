@@ -19,7 +19,7 @@ export class ApiController {
                 })
                 break;
             } catch (error) {
-                if (error.code == 1062) {
+                if (error?.parent?.errno == 1062) {
                     if (retry >= 3) {
                         length++;
                         retry = 0;
