@@ -19,7 +19,7 @@ export class ApiController {
                 })
                 break;
             } catch (error) {
-                if (error?.parent?.errno == 1062) {
+                if (error?.original?.errno == 1062) {
                     if (retry >= 3) {
                         length++;
                         retry = 0;
@@ -28,7 +28,7 @@ export class ApiController {
                     retry++;
                 } else {
                     response.status = 503;
-                    response.message = { error: 'Service Unavailable', message: error.message, code: error.code };
+                    response.message = { error: 'Service Unavailable', message: error.message, code: error?.original?.errno || error.code };
                     break;
                 }
             }
