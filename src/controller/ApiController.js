@@ -28,7 +28,7 @@ export class ApiController {
                     retry++;
                 } else {
                     response.status = 503;
-                    response.message = { error: 'Service Unavailable', message: error.message };
+                    response.message = { error: 'Service Unavailable', message: error.message, code: error.code };
                     break;
                 }
             }
