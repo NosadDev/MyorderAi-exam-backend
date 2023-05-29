@@ -12,9 +12,7 @@ app.use(cors({ origin: '*' }));
 app.post('/api/v1/shorten', ApiController.generateHash);
 app.get('/healthz', async (req, res, next) => {
     try {
-        await sequelize.authenticate().then(() => {
-            sequelize.close();
-        });
+        await sequelize.authenticate();
         return res.json({ status: "UP" });
     } catch (error) {
         return res.status(500).json({ status: "UP" });
