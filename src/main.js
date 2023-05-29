@@ -2,6 +2,7 @@ import express from "express";
 import cors from 'cors';
 import createError from 'http-errors';
 import { ApiController } from "./controller/ApiController.js";
+import { sequelize } from "./modules/database.js";
 
 const app = express();
 
@@ -9,8 +10,15 @@ app.use(express.json())
 app.use(cors({ origin: '*' }));
 
 app.post('/api/v1/shorten', ApiController.generateHash);
-app.get('/healthz', (req, res, next) => {
-    return res.json({ status: "UP" });
+app.get('/healthz', async (req, res, next) => {
+    try {
+        await sequelize.authenticate().then(() => {
+            sequelize.close();
+        });
+        return res.json({ status: "UP" });
+    } catch (error) {
+        return res.status(500).json({ status: "UP" });
+    }
 });
 app.get('/:hash', ApiController.findURL);
 
